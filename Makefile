@@ -9,6 +9,12 @@ CFLAGS=-std=c++11 -pedantic -Wall -Wextra
 chess: King.o Queen.o Rook.o Knight.o Bishop.o Pawn.o Board.o main.o Chess.o Mystery.o CreatePiece.o Terminal.o
 	$(CC) -o King.o Queen.o Rook.o Knight.o Bishop.o Pawn.o Board.o main.o Chess.o Mystery.o CreatePiece.o Terminal.o
 
+tester: tester.o King.o Queen.o Rook.o Knight.o Bishop.o Pawn.o Board.o CreatePiece.o 
+	$(CC) -o King.o Queen.o Rook.o Knight.o Bishop.o Pawn.o Board.o CreatePiece.o tester.o
+
+tester.o: tester.cpp
+	$(CC) $(CFLAGS) -c tester.cpp
+
 King.o: King.cpp King.h
 	$(CC) $(CFLAGS) -c King.cpp
 
@@ -42,8 +48,8 @@ Mystery.o: Mystery.h
 CreatePiece.o: CreatePiece.cpp CreatePiece.h
 	$(CC) $(CFLAGS) -c CreatePiece.cpp
 
-Terminal.o: Terminal.h
-	$(CC) $(CFLAGS) -c Terminal.cpp
+#Terminal.o: Terminal.h
+#	$(CC) $(CFLAGS) -c Terminal.h
 
 # Removes all object files,
 # so we can start fresh
