@@ -5,6 +5,8 @@
 #include "CreatePiece.h"
 #include "Terminal.h"
 
+using std::pair;
+
 /////////////////////////////////////
 // DO NOT MODIFY THIS FUNCTION!!!! //
 /////////////////////////////////////
@@ -145,5 +147,21 @@ bool is_valid_pos(std::pair<char, char> position) {
   }
   else {
     return true;
+  }
+}
+
+void Board::delete_piece(pair<char,char> pos){
+  const Piece* temp = (*this)(pos);
+  if (temp != nullptr){
+    delete temp;
+  }
+}
+
+void Board::clear_board(){
+  for (char i = 'A'; i < 'H'; i++){
+    for (char j = '1'; j < '8'; j++){
+      pair<char,char> pos(i,j);
+      delete_piece(pos);
+    }
   }
 }

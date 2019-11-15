@@ -41,6 +41,12 @@ public:
 	// Returns true if the board has the right number of kings on it
 	bool has_valid_kings() const;
 
+       //deletes a piece at a given location
+       void delete_piece(std::pair<char,char> pos);
+
+       //removes all pieces from board
+       void clear_board();
+  
 private:
 	// The sparse map storing the pieces, keyed off locations
 	std::map<std::pair<char, char>, Piece*> occ;
