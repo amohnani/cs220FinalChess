@@ -154,6 +154,7 @@ void Board::delete_piece(pair<char,char> pos){
   const Piece* temp = (*this)(pos);
   if (temp != nullptr){
     delete temp;
+    occ.erase(pos);
   }
 }
 
