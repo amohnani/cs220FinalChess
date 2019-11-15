@@ -159,8 +159,8 @@ void Board::delete_piece(pair<char,char> pos){
 }
 
 void Board::clear_board(){
-  for (char i = 'A'; i < 'H'; i++){
-    for (char j = '1'; j < '8'; j++){
+  for (char i = 'A'; i <= 'H'; i++){
+    for (char j = '1'; j <= '8'; j++){
       pair<char,char> pos(i,j);
       delete_piece(pos);
     }
