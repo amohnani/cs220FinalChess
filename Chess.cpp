@@ -121,8 +121,20 @@ std::ostream& operator<< (std::ostream& os, const Chess& chess) {
 
 
 std::istream& operator>> (std::istream& is, Chess& chess) {
-	/////////////////////////
-	// [REPLACE THIS STUB] //
-	/////////////////////////
+	char temp;
+    Board board = chess.get_board();
+        for (int i = '8'; i >= '1'; i--){
+            for (int j = 'A'; j <= 'H'; j++){
+                is >> temp;
+                if (temp != '-'){
+		  std::pair<char,char> pos(i,j);
+                    board.add_piece(pos, temp);
+                }
+            }
+        }
+	is >> temp;
+	if (temp == 'b'){
+	  is_white_turn = false;
+	}
 	return is;
 }
