@@ -3,7 +3,8 @@
 #include <map>
 #include "Board.h"
 #include "CreatePiece.h"
-
+#include "Terminal.h"
+#include "Helper.h"
 
 /////////////////////////////////////
 // DO NOT MODIFY THIS FUNCTION!!!! //
@@ -18,8 +19,11 @@ const Piece* Board::operator()(std::pair<char, char> position) const {
     return nullptr;
   }
   // if there is something there, set output to that
-  Piece* output = this->occ[position];
- 
+  //const Piece* output = this->occ[position];
+
+  std::map<std::pair<char, char>, Piece*> temp = this->occ;
+  const Piece* output = temp[position];
+  
   return output;
 } 
 
@@ -38,7 +42,7 @@ bool Board::add_piece(std::pair<char, char> position, char piece_designator) {
     return false;
   }
   // if there is a piece there return false
-  const Piece * Prior = this(position);
+  const Piece * Prior = (*this)(position);
   if (Prior != nullptr) {
     return false;
   }
@@ -55,11 +59,11 @@ bool Board::has_valid_kings() const {
   for (int i = 'A'; i < 'H'; i++) {
     for (int j = '1'; j < '8'; j++) {
       std::pair<char, char> position (i, j);
-      Piece * temp = this(position);
-      if (temp.to_ascii() == 'K') {
+      const Piece * temp = (*this)(position);
+      if (temp->to_ascii() == 'K') {
 	wcount++;
       }
-      else if (temp.to_ascii() == 'k') {
+      else if (temp->to_ascii() == 'k') {
 	bcount++;
       }
     }
@@ -77,23 +81,23 @@ void Board::display() const {
     for (int j = '1'; j < '8'; j++) {
       std::pair<char, char> position (i, j);
 
-      const Piece temp* = this(position);
+      const Piece *temp = (*this)(position);
       
       // sets color of the board in a grid pattern
       if ( (i + j) % 2 == 0) {
-	Terminal::color_bg(false, Terminal::MAGENTA);
+	Terminal::color_bg(Terminal::MAGENTA);
       }
       else {
-	Terminal::color_bg(true, Terminal::YELLOW);
+	Terminal::color_bg(Terminal::YELLOW);
       }
       // types nothing but background if there is no piece
-      if (*temp != NULL) {
+      if (temp != nullptr) {
 	std::cout << " ";
       }
       else {
-        char Out = toupper(temp.to_ascii());
+        char Out = temp->to_ascii();
         // if it's white use the color white
-        if (temp.iswhite()) { 
+        if (temp->is_white()) { 
   	  Terminal::color_fg(true, Terminal::WHITE);
 	  std::cout << Out;
         }
@@ -124,16 +128,4 @@ std::ostream& operator<<(std::ostream& os, const Board& board) {
 		os << std::endl;
 	}
 	return os;
-}
-
-bool is_valid_pos(std::pair<char, char> position) {
-  if (position.first < 'A' ||
-      position.first > 'H' ||
-      position.second < '1' ||
-      position.second > '8') {
-    return true;
-  }
-  else {
-    return false;
-  }
 }
