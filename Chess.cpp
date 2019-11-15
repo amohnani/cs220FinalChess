@@ -36,7 +36,52 @@ Chess::Chess() : is_white_turn(true) {
 }
 
 bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
-  // first, checks 
+  // stores the board to field
+  Board field = this->get_board();
+
+  // stores the piece on start to toMove
+  const Piece * toMove = field(start);
+
+  // stores the piece type in a char
+  char type = toMove->to_ascii();
+  
+  // checks start and end are valid
+  if (!(is_valid_pos(start) && is_valid_pos(end))) {
+    return false;
+  }
+  // checks that there is a piece there
+  if (toMove == nullptr) {
+    return false;
+  }
+  // checks that the piece is on the same side as the player
+  if (toMove->is_white() != this->is_white_turn) {
+    return false;
+  }
+  // checks if there is a piece on end, and then checks legal
+  // move shape or legal capture shape in accordance
+  const Piece * target = field(end);
+
+  if (target == nullptr) {
+    if (!(toMove->legal_move_shape(start, end))) {
+      return false;
+    }
+    else {
+      field.add_piece(end, type);
+      delete toMove;
+      return true;
+    }
+  }
+  else {
+    if (!(toMove->legal_capture_shape(start, end))) {
+      return false;
+    }
+    else {
+      delete target;
+      delete toMove;
+      field.add_piece(end, type);
+      return true;
+    }
+  } 
   return false;
 }
 
