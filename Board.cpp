@@ -4,7 +4,6 @@
 #include "Board.h"
 #include "CreatePiece.h"
 #include "Terminal.h"
-#include "Helper.h"
 
 /////////////////////////////////////
 // DO NOT MODIFY THIS FUNCTION!!!! //
@@ -47,7 +46,9 @@ bool Board::add_piece(std::pair<char, char> position, char piece_designator) {
     return false;
   }
   // add the piece otherwise
-  occ[position] = create_piece(piece_designator);
+  Piece* toAdd = create_piece(piece_designator);
+  this->occ[position] = toAdd;
+  
   return true;
 }
 
@@ -76,13 +77,14 @@ bool Board::has_valid_kings() const {
 }
 
 void Board::display() const {
+  
+  const Piece *temp;
+  char Out;
   // iterates through the board
-  for (int i = 'A'; i < 'H'; i++) {
-    for (int j = '1'; j < '8'; j++) {
-      std::pair<char, char> position (i, j);
-
-      const Piece *temp = (*this)(position);
-      
+  for (int i = '8'; i >= '1'; i--) {
+    for (int j = 'A'; j <= 'H'; j++) {
+      std::pair<char, char> position (j, i);
+      temp = (*this)(position);
       // sets color of the board in a grid pattern
       if ( (i + j) % 2 == 0) {
 	Terminal::color_bg(Terminal::MAGENTA);
@@ -91,11 +93,11 @@ void Board::display() const {
 	Terminal::color_bg(Terminal::YELLOW);
       }
       // types nothing but background if there is no piece
-      if (temp != nullptr) {
+      if (temp == nullptr) {
 	std::cout << " ";
       }
       else {
-        char Out = temp->to_ascii();
+        Out = temp->to_ascii();
         // if it's white use the color white
         if (temp->is_white()) { 
   	  Terminal::color_fg(true, Terminal::WHITE);
@@ -109,6 +111,8 @@ void Board::display() const {
       }
     }
     Terminal::set_default();
+    
+    std::cout << std::endl;
   }					
 }
 
@@ -134,12 +138,12 @@ std::ostream& operator<<(std::ostream& os, const Board& board) {
 // checks the position pair
 bool is_valid_pos(std::pair<char, char> position) {
   if (position.first < 'A'  ||
-      position.forst > 'H'  ||
+      position.first > 'H'  ||
       position.second < '1' ||
       position.second > '8')  {
-    return true;
+    return false;
   }
   else {
-    return false;
+    return true;
   }
 }
