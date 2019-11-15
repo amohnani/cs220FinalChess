@@ -49,4 +49,7 @@ private:
 // Write the board state to an output stream
 std::ostream& operator<< (std::ostream& os, const Board& board);
 
+// checks if the pos is valid
+bool is_valid_pos(std::pair<char, char> position);
+
 #endif // BOARD_H
