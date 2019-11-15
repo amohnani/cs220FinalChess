@@ -6,12 +6,8 @@
 class Pawn : public Piece {
 
 public:
-	bool legal_move_shape(std::pair<char, char> start, std::pair<char, char> end) const {
-		/////////////////////////
-		// [REPLACE THIS STUB] //
-		/////////////////////////
-		return false;
-	}
+  bool legal_move_shape(std::pair<char, char> start, std::pair<char, char> end) const ;
+  bool legal_capture_shape(std::pair<char, char> start, std::pair<char, char> end) const;
 
 	/////////////////////////////////////
 	// DO NOT MODIFY THIS FUNCTION!!!! //
