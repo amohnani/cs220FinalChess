@@ -1,6 +1,13 @@
 #include <iostream>
 #include "Board.h"
 #include "CreatePiece.h"
+#include "King.h"
+#include "Queen.h"
+#include "Bishop.h"
+#include "Knight.h"
+#include "Rook.h"
+#include "Pawn.h"
+
 
 using std::pair;
 

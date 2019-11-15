@@ -7,10 +7,10 @@ CFLAGS=-std=c++11 -pedantic -Wall -Wextra
 
 # Links together files needed to create executable
 chess: King.o Queen.o Rook.o Knight.o Bishop.o Pawn.o Board.o main.o Chess.o Mystery.h CreatePiece.o Terminal.h
-	$(CC) -o King.o Queen.o Rook.o Knight.o Bishop.o Pawn.o Board.o main.o Chess.o CreatePiece.o
+	$(CC) -o chess King.o Queen.o Rook.o Knight.o Bishop.o Pawn.o Board.o main.o Chess.o CreatePiece.o
 
-tester: tester.o King.o Queen.o Rook.o Knight.o Bishop.o Pawn.o Board.o CreatePiece.o Mystery.h Terminal.h
-	$(CC) -o King.o Queen.o Rook.o Knight.o Bishop.o Pawn.o Board.o CreatePiece.o tester.o
+tester: tester.o Queen.o King.o Rook.o Knight.o Bishop.o Pawn.o Board.o CreatePiece.o Mystery.h Terminal.h
+	$(CC) -o tester Queen.o King.o Rook.o Knight.o Bishop.o Pawn.o Board.o CreatePiece.o tester.o
 
 tester.o: tester.cpp
 	$(CC) $(CFLAGS) -c tester.cpp
