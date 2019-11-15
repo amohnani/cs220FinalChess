@@ -37,6 +37,8 @@ public:
 	// Returns true if the designated player is in mate
 	bool in_stalemate(bool white) const;
 
+        // sets the turn
+        bool set_turn(char color);
 private:
 	// The board
 	Board board;
