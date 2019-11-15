@@ -36,10 +36,8 @@ Chess::Chess() : is_white_turn(true) {
 }
 
 bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
-	/////////////////////////
-	// [REPLACE THIS STUB] //
-	/////////////////////////
-	return false;
+  // first, checks 
+  return false;
 }
 
 
