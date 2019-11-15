@@ -12,7 +12,6 @@
 #include "King.h"
 #include "Mystery.h"
 
-
 class Board {
 
         // Throughout, we will be accessing board positions using an std::pair<char, char>.
