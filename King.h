@@ -6,12 +6,7 @@
 class King : public Piece {
 
 public:
-	bool legal_move_shape(std::pair<char, char> start, std::pair<char, char> end) const {
-		/////////////////////////
-		// [REPLACE THIS STUB] //
-		/////////////////////////
-		return false;
-	}
+  bool legal_move_shape(std::pair<char, char> start, std::pair<char, char> end) const override;
 
 	/////////////////////////////////////
 	// DO NOT MODIFY THIS FUNCTION!!!! //
