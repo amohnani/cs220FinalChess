@@ -1,5 +1,8 @@
 #include "Chess.h"
-
+#include <iostream>
+using std::cout;
+using std::endl;
+using std::pair;
 /////////////////////////////////////
 // DO NOT MODIFY THIS FUNCTION!!!! //
 /////////////////////////////////////
@@ -38,7 +41,6 @@ Chess::Chess() : is_white_turn(true) {
 bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   // stores the board to field
   Board field = this->get_board();
-
   // stores the piece on start to toMove
   const Piece * toMove = field(start);
 
@@ -47,33 +49,104 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   
   // checks start and end are valid
   if (!(is_valid_pos(start) && is_valid_pos(end))) {
+    std::cout << "Invalid start or end positions" << std::endl; 
     return false;
   }
   // checks that there is a piece there
   if (toMove == nullptr) {
+    std::cout << "There is not a piece there" << endl;
     return false;
   }
   // checks that the piece is on the same side as the player
   if (toMove->is_white() != this->is_white_turn) {
+    std::cout << "The piece you moved is no the right color" << std::endl;
+    return false;
+  }
+  // checks if a move is being made
+  if (start == end) {
+    cout << "The piece has to be moved" << endl;
     return false;
   }
   // checks if there is a piece on end, and then checks legal
   // move shape or legal capture shape in accordance
   const Piece * target = field(end);
-
+  // for the case that there is nothing at the end
   if (target == nullptr) {
+    // checks if the move shape is valid
     if (!(toMove->legal_move_shape(start, end))) {
+      cout << "Not a valid move for the piece" << endl;
       return false;
     }
-    else {
-      field.add_piece(end, type);
-      field.delete_piece(start);
-      this->is_white_turn = !(this->is_white_turn);
-      return true;
+    // checks if there are pieces in between,
+    // and if we should care
+    char path1;
+    char path2;
+
+    // check for if we are travelling in a straight
+    // line vertically
+    if (start.first - end.first == 0) {
+      if (start.second > end.second) {
+	for (int i = 1; i < start.second - end.second; i++) {
+          path1 = start.first;
+	  path2 = start.second - i;
+	  pair<char, char> posBt (path1, path2);
+	  const Piece* bt = field(posBt);
+	  if (bt != nullptr) {
+	    cout << "there's a piece inbetween" << endl;
+            return false;
+	  }
+        }
+      }
+      else {
+	for (int i = 1; i < end.second - start.second; i++) {
+          path1 = start.first;
+	  path2 = start.second+i;
+	  pair<char, char> posBt (path1, path2);
+	  const Piece *bt = field(posBt);
+	  if (bt != nullptr) {
+	    cout << "there's a piece in between" << endl;
+	    return false;
+	  }
+	}
+      }
     }
+
+    // check for travelling horizontally
+    else if (start.second - end.second == 0) {
+      if (start.first > end.first) {
+	for (int i = 1; i < start.first - end.first; i++) {
+	  path1 = start.first - i;
+	  path2 = start.second;
+	  pair <char, char> posBt (path1, path2);
+	  const Piece *bt = field(posBt);
+	  if (bt != nullptr) {
+	    cout << "there's a piece inbetween" << endl;
+	    return false;
+	  }
+	}
+      }
+      else {
+	for (int i = 1; i < end.first - start.first; i++) {
+	  path1 = start.first + i;
+	  path2 = start.second;
+	  pair <char, char>posBt (path1, path2);
+	  const Piece *bt = field(posBt);
+	  if (bt != nullptr) {
+	    cout << "there's a piece in between" << endl;
+	  }
+	}
+      }
+    }
+    
+    field.add_piece(end, type);
+    field.delete_piece(start);
+    this->is_white_turn = !(this->is_white_turn);
+    field.display();
+    return true;
   }
   else {
     if (!(toMove->legal_capture_shape(start, end))) {
+      cout << "can't move to capture this way" << endl;
       return false;
     }
     else {
@@ -83,7 +156,8 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
       this->is_white_turn = !(this->is_white_turn);
       return true;
     }
-  } 
+  }
+  cout << "Mistake reached end of make move func" << endl;
   return false;
 }
 
