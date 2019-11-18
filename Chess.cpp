@@ -41,10 +41,8 @@ Chess::Chess() : is_white_turn(true) {
 }
 
 bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
-  // stores the board to field
-  Board field = this->get_board();
   // stores the piece on start to toMove
-  const Piece * toMove = field(start);
+  const Piece * toMove = (this->board)(start);
 
   // stores the piece type in a char
   char type = toMove->to_ascii();
@@ -83,7 +81,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
       path1 = start.first;
       path2 = end.second + i;
       pair<char, char> posBt (path1, path2);
-      const Piece* bt = field(posBt);
+      const Piece* bt = (this->board)(posBt);
       // if there's a piece thats not a nullptr, error
       if (bt != nullptr) {
         cout << "there's a piece inbetween" << endl;
@@ -101,7 +99,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
     path1 = end.first + i;
     path2 = start.second;
     pair <char, char> posBt (path1, path2);
-    const Piece *bt = field(posBt);
+    const Piece *bt = (this->board)(posBt);
     if (bt != nullptr) {
       cout << "there's a piece inbetween" << endl;
       return false;
@@ -117,7 +115,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
       path1 = start.first + i;
       path2 = start.second + j;
       pair <char, char> posBt (path1, path2);
-      const Piece *bt = field(posBt);
+      const Piece *bt = (this->board)(posBt);
       if (bt != nullptr) {
         cout << "there's a piece inbetween" << endl;
         return false;
@@ -128,7 +126,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
 
   // checks if there is a piece on end, and then checks legal
   // move shape or legal capture shape in accordance
-  const Piece * target = field(end);
+  const Piece * target = (this->board)(end);
   // for the case that there is nothing at the end
   if (target == nullptr) {
     // checks if the move shape is valid
@@ -137,8 +135,8 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
       return false;
     }
     
-    field.add_piece(end, type);
-    field.delete_piece(start);
+    board.add_piece(end, type);
+    board.delete_piece(start);
     this->is_white_turn = !(this->is_white_turn);
   }
   else {
@@ -147,19 +145,19 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
       return false;
     }
     else {
-      field.delete_piece(start);
-      field.delete_piece(end);
-      field.add_piece(end, type);
+      board.delete_piece(start);
+      board.delete_piece(end);
+      board.add_piece(end, type);
       this->is_white_turn = !(this->is_white_turn);
     }
   }
 
   if (in_check(this->is_white_turn)) {
-    field.delete_piece(end);
+    board.delete_piece(end);
     if (!(target == nullptr)) {
-      field.add_piece(end, target->to_ascii());
+      board.add_piece(end, target->to_ascii());
     }
-    field.add_piece(start, type);
+    board.add_piece(start, type);
     cout << "if you make this move, you would be in check" << endl;
     return false;
   }
