@@ -48,4 +48,4 @@ CreatePiece.o: CreatePiece.cpp CreatePiece.h
 # Removes all object files,
 # so we can start fresh
 clean:
-	rm -f *.o chess
+	rm -f *.o chess tester

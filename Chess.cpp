@@ -1,5 +1,7 @@
 #include "Chess.h"
 #include <iostream>
+#include <cmath>
+
 using std::cout;
 using std::endl;
 using std::pair;
@@ -59,7 +61,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   }
   // checks that the piece is on the same side as the player
   if (toMove->is_white() != this->is_white_turn) {
-    std::cout << "The piece you moved is no the right color" << std::endl;
+    std::cout << "The piece you moved is not the right color" << std::endl;
     return false;
   }
   // checks if a move is being made
@@ -67,6 +69,63 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
     cout << "The piece has to be moved" << endl;
     return false;
   }
+
+  // checks whether there's a piece in between when the
+  // piece moves horizontally, vertically, or diagonally
+  char path1;
+  char path2;
+  // checks for vertical movement
+  if (start.first - end.first == 0) {
+    // iterates through the vertical path
+    for (int i = (start.second-end.second)/abs(start.second-end.second);
+         abs(i) < abs(start.second - end.second);
+         i += (start.second-end.second)/abs(start.second-end.second)) {
+      path1 = start.first;
+      path2 = end.second + i;
+      pair<char, char> posBt (path1, path2);
+      const Piece* bt = field(posBt);
+      // if there's a piece thats not a nullptr, error
+      if (bt != nullptr) {
+        cout << "there's a piece inbetween" << endl;
+        return false;
+      }
+    }
+  }
+
+  // check for travelling horizontally
+  else if (start.second - end.second == 0) {
+    // iterates through the horizontal path
+    for (int i = (start.second-end.second)/abs(start.second-end.second);
+       abs(i) < abs(start.first - end.first);
+       i += (start.first - end.first)/abs(start.first - end.first)) {
+    path1 = end.first + i;
+    path2 = start.second;
+    pair <char, char> posBt (path1, path2);
+    const Piece *bt = field(posBt);
+    if (bt != nullptr) {
+      cout << "there's a piece inbetween" << endl;
+      return false;
+    }
+   }
+  }
+  else if (abs(start.second-end.second) == abs(start.first-end.first)) {
+    // iterates through the diagonal path
+    for (int i = (end.first - start.first)/abs(end.first - start.first);
+         abs(i) < abs(end.first-start.first);
+         i += (end.first - start.first)/abs(end.first - start.first)) {
+      int j = (end.second-start.second)/abs(end.second-start.second);
+      path1 = start.first + i;
+      path2 = start.second + j;
+      pair <char, char> posBt (path1, path2);
+      const Piece *bt = field(posBt);
+      if (bt != nullptr) {
+        cout << "there's a piece inbetween" << endl;
+        return false;
+      }
+    }
+  }
+
+
   // checks if there is a piece on end, and then checks legal
   // move shape or legal capture shape in accordance
   const Piece * target = field(end);
@@ -77,72 +136,10 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
       cout << "Not a valid move for the piece" << endl;
       return false;
     }
-    // checks if there are pieces in between,
-    // and if we should care
-    char path1;
-    char path2;
-
-    // check for if we are travelling in a straight
-    // line vertically
-    if (start.first - end.first == 0) {
-      if (start.second > end.second) {
-	for (int i = 1; i < start.second - end.second; i++) {
-          path1 = start.first;
-	  path2 = start.second - i;
-	  pair<char, char> posBt (path1, path2);
-	  const Piece* bt = field(posBt);
-	  if (bt != nullptr) {
-	    cout << "there's a piece inbetween" << endl;
-            return false;
-	  }
-        }
-      }
-      else {
-	for (int i = 1; i < end.second - start.second; i++) {
-          path1 = start.first;
-	  path2 = start.second+i;
-	  pair<char, char> posBt (path1, path2);
-	  const Piece *bt = field(posBt);
-	  if (bt != nullptr) {
-	    cout << "there's a piece in between" << endl;
-	    return false;
-	  }
-	}
-      }
-    }
-
-    // check for travelling horizontally
-    else if (start.second - end.second == 0) {
-      if (start.first > end.first) {
-	for (int i = 1; i < start.first - end.first; i++) {
-	  path1 = start.first - i;
-	  path2 = start.second;
-	  pair <char, char> posBt (path1, path2);
-	  const Piece *bt = field(posBt);
-	  if (bt != nullptr) {
-	    cout << "there's a piece inbetween" << endl;
-	    return false;
-	  }
-	}
-      }
-      else {
-	for (int i = 1; i < end.first - start.first; i++) {
-	  path1 = start.first + i;
-	  path2 = start.second;
-	  pair <char, char>posBt (path1, path2);
-	  const Piece *bt = field(posBt);
-	  if (bt != nullptr) {
-	    cout << "there's a piece in between" << endl;
-	  }
-	}
-      }
-    }
     
     field.add_piece(end, type);
     field.delete_piece(start);
     this->is_white_turn = !(this->is_white_turn);
-    field.display();
-    return true;
   }
   else {
     if (!(toMove->legal_capture_shape(start, end))) {
@@ -154,11 +151,20 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
       field.delete_piece(end);
       field.add_piece(end, type);
       this->is_white_turn = !(this->is_white_turn);
-      return true;
     }
   }
-  cout << "Mistake reached end of make move func" << endl;
-  return false;
+
+  if (in_check(this->is_white_turn)) {
+    field.delete_piece(end);
+    if (!(target == nullptr)) {
+      field.add_piece(end, target->to_ascii());
+    }
+    field.add_piece(start, type);
+    cout << "if you make this move, you would be in check" << endl;
+    return false;
+  }
+  
+  return true;
 }
 
 
