@@ -134,25 +134,37 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
       cout << "Not a valid move for the piece" << endl;
       return false;
     }
-    
+    // adds the piece if it is valid
     board.add_piece(end, type);
     board.delete_piece(start);
     this->is_white_turn = !(this->is_white_turn);
   }
   else {
+    // checks if the capture shape is valid
     if (!(toMove->legal_capture_shape(start, end))) {
       cout << "can't move to capture this way" << endl;
       return false;
     }
     else {
+      // moves the piece and removes the captured piece
       board.delete_piece(start);
       board.delete_piece(end);
       board.add_piece(end, type);
       this->is_white_turn = !(this->is_white_turn);
     }
   }
-
+  // checks if a pawn should be promoted
+  if (type == 'P' && end.second == '8') {
+    board.delete_piece(end);
+    board.add_piece(end, 'Q');
+  }
+  else if (type == 'p' && end.second == '1') {
+    board.delete_piece(end);
+    board.add_piece(end, 'q');
+  }
+  // checks if the move would result in a check
   if (in_check(this->is_white_turn)) {
+    // reverts the move if so
     board.delete_piece(end);
     if (!(target == nullptr)) {
       board.add_piece(end, target->to_ascii());
