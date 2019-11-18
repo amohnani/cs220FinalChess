@@ -26,8 +26,8 @@ bool Pawn::legal_capture_shape(pair<char,char> start, pair<char,char> end) const
     return false;
   }
   if (is_white()){
-    return start.second - end.second == 1;
-  }else{
     return end.second - start.second == 1;
+  }else{
+    return start.second - end.second == 1;
   }
 }
