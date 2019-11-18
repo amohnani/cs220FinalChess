@@ -41,22 +41,25 @@ Chess::Chess() : is_white_turn(true) {
 }
 
 bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
-  // stores the piece on start to toMove
-  const Piece * toMove = (this->board)(start);
-
-  // stores the piece type in a char
-  char type = toMove->to_ascii();
   
   // checks start and end are valid
   if (!(is_valid_pos(start) && is_valid_pos(end))) {
     std::cout << "Invalid start or end positions" << std::endl; 
     return false;
   }
+  
+  // stores the piece on start to toMove
+  const Piece * toMove = (this->board)(start);
+
   // checks that there is a piece there
   if (toMove == nullptr) {
     std::cout << "There is not a piece there" << endl;
     return false;
   }
+  
+  // stores the piece type in a char
+  char type = toMove->to_ascii();
+  
   // checks that the piece is on the same side as the player
   if (toMove->is_white() != this->is_white_turn) {
     std::cout << "The piece you moved is not the right color" << std::endl;
