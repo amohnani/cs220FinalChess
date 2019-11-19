@@ -5,7 +5,7 @@
 #include "CreatePiece.h"
 #include "Terminal.h"
 
-using std::pair;
+using std::pair; using std::map;
 
 /////////////////////////////////////
 // DO NOT MODIFY THIS FUNCTION!!!! //
@@ -26,7 +26,9 @@ const Piece* Board::operator()(std::pair<char, char> position) const {
   const Piece* output = temp[position];
   
   return output;
-} 
+}
+
+
 
 
 bool Board::add_piece(std::pair<char, char> position, char piece_designator) {
@@ -111,11 +113,12 @@ void Board::display() const {
 	  std::cout << Out;
 	}
       }
+      
     }
     Terminal::set_default();
     
     std::cout << std::endl;
-  }					
+  }
 }
 
 /////////////////////////////////////
@@ -164,5 +167,12 @@ void Board::clear_board(){
       pair<char,char> pos(i,j);
       delete_piece(pos);
     }
+  }
+}
+
+Board::~Board(){
+  for (map<pair<char,char>, Piece*>::iterator i = occ.begin();
+       i != occ.end(); i++){
+    delete i->second;
   }
 }
