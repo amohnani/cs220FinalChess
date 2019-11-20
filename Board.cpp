@@ -61,15 +61,17 @@ bool Board::has_valid_kings() const {
   int wcount = 0;
   // iterate through the board, counting
   // number of black and white kings
-  for (int i = 'A'; i < 'H'; i++) {
-    for (int j = '1'; j < '8'; j++) {
+  for (int i = 'A'; i <= 'H'; i++) {
+    for (int j = '1'; j <= '8'; j++) {
       std::pair<char, char> position (i, j);
       const Piece * temp = (*this)(position);
-      if (temp->to_ascii() == 'K') {
-	wcount++;
-      }
-      else if (temp->to_ascii() == 'k') {
-	bcount++;
+      if (!(temp == nullptr)) {
+        if (temp->to_ascii() == 'K') {
+	  wcount++;
+        }
+        else if (temp->to_ascii() == 'k') {
+	  bcount++;
+	}
       }
     }
   }
@@ -178,6 +180,11 @@ Board::~Board(){
   }
 }
 
-void Board::set(Board& b){
-
+void Board::set(Board *b){
+  for (map<pair<char,char>,Piece*>::iterator i = b->occ.begin();
+       i != b->occ.end(); i++){
+    Piece* toAdd = create_piece(i->second->to_ascii());
+    std::cout << toAdd->to_ascii();
+    occ[i->first] = toAdd;
+  }
 }

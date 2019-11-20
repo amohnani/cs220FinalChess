@@ -234,8 +234,13 @@ std::istream& operator>> (std::istream& is, Chess& chess) {
   }
   is >> temp;
   chess.set_turn(temp);
-  chess.set_board(*b);
+  cout << "set turn worked" << endl;
+  chess.set_board(b);
+  cout << "set board worked" << endl;
+  chess.get_board().display();
   delete b;
+  cout << "got to end of >>" << endl;
+  chess.get_board().display();
   return is;
 }
 
@@ -255,7 +260,10 @@ bool Chess::set_turn(char color) {
   }
 }
 
-void Chess::set_board(Board b){
+void Chess::set_board(Board *b){
   board.clear_board();
+  cout << "clear worked" << endl;
   board.set(b);
+  cout << "set board worked" << endl;
+  board.display();
 }

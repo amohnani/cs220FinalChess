@@ -88,7 +88,9 @@ int main(int argc, char* argv[]) {
 				std::ifstream ifs;
 				ifs.open( argument );
 				ifs >> chess;
+			       
 				ifs.close();
+				
 				// Check that the game is valid
 				assert(chess.get_board().has_valid_kings());
 				break;
