@@ -180,11 +180,4 @@ Board::~Board(){
   }
 }
 
-void Board::set(Board *b){
-  for (map<pair<char,char>,Piece*>::iterator i = b->occ.begin();
-       i != b->occ.end(); i++){
-    Piece* toAdd = create_piece(i->second->to_ascii());
-    std::cout << toAdd->to_ascii();
-    occ[i->first] = toAdd;
-  }
-}
+
