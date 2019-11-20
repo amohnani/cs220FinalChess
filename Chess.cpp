@@ -144,6 +144,10 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   }
   else {
     // checks if the capture shape is valid
+    if (target->is_white() == this->turn_white()) {
+      cout << "you can't capture your own piece" << endl;
+      return false;
+    }
     if (!(toMove->legal_capture_shape(start, end))) {
       cout << "can't move to capture this way" << endl;
       return false;
