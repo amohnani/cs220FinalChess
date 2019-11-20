@@ -177,3 +177,7 @@ Board::~Board(){
     delete i->second;
   }
 }
+
+void Board::set(Board& b){
+
+}

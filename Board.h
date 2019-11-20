@@ -46,7 +46,9 @@ public:
 
        //removes all pieces from board
        void clear_board();
-  
+
+  //creates a deep copy
+  void set(Board& b);
 private:
 	// The sparse map storing the pieces, keyed off locations
 	std::map<std::pair<char, char>, Piece*> occ;

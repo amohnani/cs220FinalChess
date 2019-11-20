@@ -221,20 +221,21 @@ std::ostream& operator<< (std::ostream& os, const Chess& chess) {
 
 std::istream& operator>> (std::istream& is, Chess& chess) {
   char temp;
-  Board board;
+  Board *b = new Board();
   
   for (int i = '8'; i >= '1'; i--){
     for (int j = 'A'; j <= 'H'; j++){
       is >> temp;
       if (temp != '-'){
         std::pair<char,char> pos(j,i);
-        board.add_piece(pos, temp);
+        b->add_piece(pos, temp);
       }
     }
   }
   is >> temp;
   chess.set_turn(temp);
-  chess.set_board(&board);
+  chess.set_board(*b);
+  delete b;
   return is;
 }
 
@@ -254,7 +255,7 @@ bool Chess::set_turn(char color) {
   }
 }
 
-void Chess::set_board(Board *b){
+void Chess::set_board(Board b){
   board.clear_board();
-  board = *b;
+  board.set(b);
 }
