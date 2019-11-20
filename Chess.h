@@ -42,6 +42,8 @@ public:
 
         //sets the board
         void set_board(Board *b);
+
+        bool is_valid_move(std::pair<char, char> start, std::pair<char, char> end, bool to_capture);
 private:
 	// The board
 	Board board;
