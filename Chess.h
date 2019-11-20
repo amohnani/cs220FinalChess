@@ -39,6 +39,9 @@ public:
 
         // sets the turn
         bool set_turn(char color);
+
+        //sets the board
+        void set_board(Board* b);
 private:
 	// The board
 	Board board;
