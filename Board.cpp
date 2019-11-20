@@ -90,6 +90,7 @@ void Board::display() const {
       std::pair<char, char> position (j, i);
       temp = (*this)(position);
       // sets color of the board in a grid pattern
+      Terminal::set_default();
       if ( (i + j) % 2 == 0) {
 	Terminal::color_bg(Terminal::MAGENTA);
       }
