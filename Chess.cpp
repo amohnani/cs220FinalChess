@@ -114,7 +114,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
     for (int i = (end.first - start.first)/abs(end.first - start.first);
          abs(i) < abs(end.first-start.first);
          i += (end.first - start.first)/abs(end.first - start.first)) {
-      int j = (end.second-start.second)/abs(end.second-start.second);
+      int j = abs(i) * (end.second-start.second)/abs(end.second-start.second);
       path1 = start.first + i;
       path2 = start.second + j;
       pair <char, char> posBt (path1, path2);
