@@ -100,8 +100,8 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
 // checks whether the move is valid
 // pre-condition: start and end must by valid **
 bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end, bool to_capture){
-  // stores the piece on start to toMove
-  const Piece * toMove = (this->board)(start);
+  // stores the piece on start to toMove  
+const Piece * toMove = (this->board)(start);
 
   // checks that there is a piece there
   if (toMove == nullptr) {
@@ -185,10 +185,20 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
 
 
 bool Chess::in_check(bool white) const {
-	/////////////////////////
-	// [REPLACE THIS STUB] //
-	/////////////////////////
-	return false;
+  //finds king on board
+  std;pair<char,char> KingPosition('A', '1');
+  for (int i = 'A'; i <= 'H'; i++) {
+    for (int j = '1'; j <= '8'; j++) {
+      std::pair<char, char> position (i, j);
+      const Piece * temp = (*this)(position);
+      if (!(temp == nullptr)) {
+	if (temp->to_ascii() == 'K') {
+	  KingPosition = position (i,j);
+	}
+      }
+    }
+  }
+  return false;
 }
 
 
