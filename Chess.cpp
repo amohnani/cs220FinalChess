@@ -55,6 +55,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   char type = toMove->to_ascii();
   // for the case that there is nothing at the end
   if (target == nullptr) {
+    cout << "yes" << endl;
     if (!(is_valid_move(start, end, false))) {
       return false;
     }
@@ -101,15 +102,16 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
 // pre-condition: start and end must by valid **
 bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end, bool to_capture){
   // stores the piece on start to toMove
+  // and the piece on end to toTarget
   const Piece * toMove = (this->board)(start);
-
+  const Piece * toTarget = (this->board)(end);
   // checks that there is a piece there
   if (toMove == nullptr) {
     return false;
   }
 
   // checks that the piece is on the same side as the player
-  if (toMove->is_white() == this->is_white_turn) {
+  if (toMove->is_white() != this->is_white_turn) {
     return false;
   }
   // checks if a move is being made
@@ -174,9 +176,18 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
     if (!(toMove->legal_capture_shape(start, end))) {
       return false;
     }
+    if (toTarget == nullptr) {
+      return false;
+    }
+    if (toTarget->is_white() == is_white_turn) {
+      return false;
+    }
   }
   else {
     if (!(toMove->legal_move_shape(start, end))) {
+      return false;
+    }
+    if (toTarget != nullptr) {
       return false;
     }
   }
