@@ -55,7 +55,6 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   char type = toMove->to_ascii();
   // for the case that there is nothing at the end
   if (target == nullptr) {
-    cout << "yes" << endl;
     if (!(is_valid_move(start, end, false))) {
       return false;
     }
@@ -100,7 +99,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
 
 // checks whether the move is valid
 // pre-condition: start and end must by valid **
-bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end, bool to_capture){
+bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end, bool to_capture) const{
   // stores the piece on start to toMove
   // and the piece on end to toTarget
   const Piece * toMove = (this->board)(start);
@@ -112,6 +111,9 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
 
   // checks that the piece is on the same side as the player
   if (toMove->is_white() != this->is_white_turn) {
+    if (toMove->to_ascii() == 'Q'){
+      cout << "hi" << end.first << end.second << endl;
+    }
     return false;
   }
   // checks if a move is being made
@@ -134,7 +136,6 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
       const Piece* bt = (this->board)(posBt);
       // if there's a piece thats not a nullptr, error
       if (bt != nullptr) {
-	cout << "there's a piece inbetween" << endl;
 	return false;
       }
     }
@@ -150,7 +151,6 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
       pair <char, char> posBt (path1, path2);
       const Piece *bt = (this->board)(posBt);
       if (bt != nullptr) {
-	cout << "there's a piece inbetween" << endl;
 	return false;
       }
     }
@@ -166,13 +166,14 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
       pair <char, char> posBt (path1, path2);
       const Piece *bt = (this->board)(posBt);
       if (bt != nullptr) {
-	cout << "there's a piece inbetween" << endl;
 	return false;
+	
       }
     }
   }
 
-  if (to_capture) {
+  if (to_capture && toMove->to_ascii() == 'Q') {
+    cout << "yay" << endl;
     if (!(toMove->legal_capture_shape(start, end))) {
       return false;
     }
@@ -199,6 +200,35 @@ bool Chess::in_check(bool white) const {
 	/////////////////////////
 	// [REPLACE THIS STUB] //
 	/////////////////////////
+  pair<char,char> pos;
+  for (char i = '1'; i <= '8'; i++){
+    for (char j = 'A'; j <= 'H'; j++){
+      pair<char,char> cur(j,i);
+      const Piece* temp = board(cur);
+      if (temp == nullptr){
+	break;
+      }
+      if (temp->to_ascii() == 'K' && white){
+	pos.first = j;
+	pos.second = i;
+      }else if (temp->to_ascii() == 'k' && !white){
+	pos.first = j;
+	pos.second = i;
+      }
+    }
+  }
+  for (char i = '1'; i <= '8'; i++){
+    for (char j = 'A'; j <= 'H'; j++){
+      pair<char,char> curPos(j,i);
+      const Piece* temp = board(curPos);
+      if (temp != nullptr){
+	if (is_valid_move(curPos, pos, true)){
+	  
+	    return true;
+	  }
+      }
+    }
+  }
 	return false;
 }
 
