@@ -109,7 +109,7 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
   }
 
   // checks that the piece is on the same side as the player
-  if (toMove->is_white() != this->is_white_turn) {
+  if (toMove->is_white() == this->is_white_turn) {
     return false;
   }
   // checks if a move is being made
