@@ -52,6 +52,9 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   // move shape or legal capture shape in accordance
   const Piece * target = (this->board)(end);
   const Piece * toMove = (this->board)(start);
+  if (toMove == nullptr) {
+    return false;
+  }
   char type = toMove->to_ascii();
   // for the case that there is nothing at the end
   if (target == nullptr) {
@@ -83,7 +86,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
     board.add_piece(end, 'q');
   }
   // checks if the move would result in a check
-  if (in_check(this->is_white_turn)) {
+  if (in_check(!(this->is_white_turn))) {
     // reverts the move if so
     board.delete_piece(end);
     if (!(target == nullptr)) {
@@ -110,12 +113,9 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
   }
 
   // checks that the piece is on the same side as the player
-  if (toMove->is_white() != this->is_white_turn) {
-    if (toMove->to_ascii() == 'Q'){
-      cout << "hi" << end.first << end.second << endl;
-    }
-    return false;
-  }
+  //if (toMove->is_white() != white) {
+  //  return false;
+  // }
   // checks if a move is being made
   if (start == end) {
     return false;
@@ -173,14 +173,13 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
   }
 
   if (to_capture && toMove->to_ascii() == 'Q') {
-    cout << "yay" << endl;
     if (!(toMove->legal_capture_shape(start, end))) {
       return false;
     }
     if (toTarget == nullptr) {
       return false;
     }
-    if (toTarget->is_white() == is_white_turn) {
+    if (toTarget->is_white() == toMove->is_white()) {
       return false;
     }
   }
@@ -197,9 +196,7 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
 
 
 bool Chess::in_check(bool white) const {
-	/////////////////////////
-	// [REPLACE THIS STUB] //
-	/////////////////////////
+
   pair<char,char> pos;
   for (char i = '1'; i <= '8'; i++){
     for (char j = 'A'; j <= 'H'; j++){
@@ -223,13 +220,13 @@ bool Chess::in_check(bool white) const {
       const Piece* temp = board(curPos);
       if (temp != nullptr){
 	if (is_valid_move(curPos, pos, true)){
-	  
+	  cout << temp->to_ascii() << endl;
 	    return true;
 	  }
       }
     }
   }
-	return false;
+  return false;
 }
 
 

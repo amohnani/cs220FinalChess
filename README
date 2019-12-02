@@ -1,10 +1,7 @@
 TEAM
-Abhi Mohnani
-amohnan1
-Alan Zhang
-azhang42
-Vasant Bhardwaj
-vbhardw2
+Abhi Mohnani - amohnan1
+Alan Zhang - azhang42
+Vasant Bhardwaj - vbhardw2
 
 DESIGN
 We used the basic framework that was provided by the starter code to construct the program. Using the concept of Polymorphism, we wrote the code for the different pieces and used those functions in the make_move, in_check, in_checkmate, and stalemate functions. Finally, we created a destructor in Board to prevent any memory leaks from occurring. 
