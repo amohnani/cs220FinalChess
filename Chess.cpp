@@ -186,14 +186,26 @@ const Piece * toMove = (this->board)(start);
 
 bool Chess::in_check(bool white) const {
   //finds king on board
-  std;pair<char,char> KingPosition('A', '1');
+  std;pair<char,char> KingPosition;
   for (int i = 'A'; i <= 'H'; i++) {
     for (int j = '1'; j <= '8'; j++) {
       std::pair<char, char> position (i, j);
       const Piece * temp = (*this)(position);
       if (!(temp == nullptr)) {
 	if (temp->to_ascii() == 'K') {
-	  KingPosition = position (i,j);
+	  KingPosition.first = i;
+	  KingPosition.second = j;
+	}
+      }
+    }
+  }
+  for(int k = 'A';k <= 'H'; k++){
+    for(int l = '1'; l <= '8'; l++){
+      std::pair<char, char> spot (k, l);
+      const Piece * temp = board(position);
+      if(!(temp == nullptr)){
+	if(is_valid_move(position,KingPosition; true)){
+	  
 	}
       }
     }
