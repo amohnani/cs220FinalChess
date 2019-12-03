@@ -102,18 +102,11 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
 
 // checks whether the move is valid
 // pre-condition: start and end must by valid **
-<<<<<<< HEAD
-bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end, bool to_capture){
-  // stores the piece on start to toMove  
-const Piece * toMove = (this->board)(start);
-
-=======
 bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end, bool to_capture) const{
   // stores the piece on start to toMove
   // and the piece on end to toTarget
   const Piece * toMove = (this->board)(start);
   const Piece * toTarget = (this->board)(end);
->>>>>>> ed18f80217e79025ed90220c644142d36cafe4ea
   // checks that there is a piece there
   if (toMove == nullptr) {
     return false;
@@ -203,7 +196,6 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
 
 
 bool Chess::in_check(bool white) const {
-<<<<<<< HEAD
   //finds king on board
   std;pair<char,char> KingPosition;
   for (int i = 'A'; i <= 'H'; i++) {
@@ -227,35 +219,7 @@ bool Chess::in_check(bool white) const {
 	  
 
 	}
-=======
-
-  pair<char,char> pos;
-  for (char i = '1'; i <= '8'; i++){
-    for (char j = 'A'; j <= 'H'; j++){
-      pair<char,char> cur(j,i);
-      const Piece* temp = board(cur);
-      if (temp == nullptr){
-	break;
       }
-      if (temp->to_ascii() == 'K' && white){
-	pos.first = j;
-	pos.second = i;
-      }else if (temp->to_ascii() == 'k' && !white){
-	pos.first = j;
-	pos.second = i;
-      }
-    }
-  }
-  for (char i = '1'; i <= '8'; i++){
-    for (char j = 'A'; j <= 'H'; j++){
-      pair<char,char> curPos(j,i);
-      const Piece* temp = board(curPos);
-      if (temp != nullptr){
-	if (is_valid_move(curPos, pos, true)){
-	  cout << temp->to_ascii() << endl;
-	    return true;
-	  }
-     }
     }
   }
   return false;
