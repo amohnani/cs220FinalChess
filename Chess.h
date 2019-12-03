@@ -43,7 +43,7 @@ public:
         //sets the board
         void set_board(Board *b);
 
-        bool is_valid_move(std::pair<char, char> start, std::pair<char, char> end, bool to_capture);
+  bool is_valid_move(std::pair<char, char> start, std::pair<char, char> end, bool to_capture) const;
 
        // Reads the board in from a stream
        friend std::istream& operator>> (std::istream& is, Chess& chess);
