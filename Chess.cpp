@@ -91,7 +91,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
     board.add_piece(end, 'q');
   }
   // checks if the move would result in a check
-  if (in_check(!(this->is_white_turn))) {
+  if (in_check((this->is_white_turn))) {
     // reverts the move if so
     board.delete_piece(end);
     if (!(target == nullptr)) {
@@ -207,10 +207,8 @@ bool Chess::in_check(bool white) const {
     for (char j = 'A'; j <= 'H'; j++){
       pair<char,char> cur(j,i);
       const Piece* temp = board(cur);
-      if (temp == nullptr){
-	break;
-      }
-      if (temp->to_ascii() == 'K' && white){
+      if (temp == nullptr){ }
+      else if (temp->to_ascii() == 'K' && white){
 	pos.first = j;
 	pos.second = i;
       }else if (temp->to_ascii() == 'k' && !white){
@@ -219,14 +217,21 @@ bool Chess::in_check(bool white) const {
       }
     }
   }
+
   for (char i = '1'; i <= '8'; i++){
     for (char j = 'A'; j <= 'H'; j++){
       pair<char,char> curPos(j,i);
       const Piece* temp = board(curPos);
+
+      
       if (temp != nullptr){
-	if (is_valid_move(curPos, pos, true)){
+	if (temp->is_white() != white) {
+	  if (is_valid_move(curPos, pos, true)){
+	    cout << "you are in check because of" << curPos.first <<
+	      curPos.second << " " << pos.first << pos.second << endl;
 	    return true;
-	  }
+	   }
+	}
       }
     }
   }
@@ -312,8 +317,7 @@ std::istream& operator>> (std::istream& is, Chess& chess) {
   return is;
 }
 
-bool Chess::set_turn(char color) {
-  cout << color << endl;
+bool Chess::set_turn(char color) {;
   if (color != 'b' &&
       color != 'w') {
     return false;
