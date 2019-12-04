@@ -66,10 +66,12 @@ bool Board::has_valid_kings() const {
       std::pair<char, char> position (i, j);
       const Piece * temp = (*this)(position);
       if (!(temp == nullptr)) {
+	// add one to wcount if there's a white king
         if (temp->to_ascii() == 'K') {
 	  wcount++;
         }
         else if (temp->to_ascii() == 'k') {
+	  // add to bcount if there's a black
 	  bcount++;
 	}
       }
@@ -156,6 +158,7 @@ bool is_valid_pos(std::pair<char, char> position) {
   }
 }
 
+// deletes a piece from a specific poition
 void Board::delete_piece(pair<char,char> pos){
   const Piece* temp = (*this)(pos);
   if (temp != nullptr){
@@ -164,6 +167,8 @@ void Board::delete_piece(pair<char,char> pos){
   }
 }
 
+// clears the board, deleting all the pieces
+// from it
 void Board::clear_board(){
   for (char i = 'A'; i <= 'H'; i++){
     for (char j = '1'; j <= '8'; j++){
@@ -173,6 +178,7 @@ void Board::clear_board(){
   }
 }
 
+// destructor
 Board::~Board(){
   for (map<pair<char,char>, Piece*>::iterator i = occ.begin();
        i != occ.end(); i++){

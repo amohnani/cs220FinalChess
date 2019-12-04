@@ -53,14 +53,18 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   const Piece * target = (this->board)(end);
   char targetType;
   const Piece * toMove = (this->board)(start);
+  char type;
+  // checks if there's a piece that is being moved
   if (toMove == nullptr) {
     return false;
   }
+  // checks that the colors of the piece
+  // and whose turn it is matchesx
   if (toMove->is_white() != is_white_turn) {
     return false;
   }
   
-  char type = toMove->to_ascii();
+  type = toMove->to_ascii();
   // for the case that there is nothing at the end
   if (target == nullptr) {
     if (!(is_valid_move(start, end, false))) {
