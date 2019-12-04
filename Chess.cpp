@@ -197,7 +197,7 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
 
 bool Chess::in_check(bool white) const {
   //finds king on board
-  std;pair<char,char> KingPosition;
+  std::pair<char,char> KingPosition;
   for (int i = 'A'; i <= 'H'; i++) {
     for (int j = '1'; j <= '8'; j++) {
       std::pair<char, char> position (i, j);
@@ -216,7 +216,7 @@ bool Chess::in_check(bool white) const {
       const Piece * temp = board(position);
       if(!(temp == nullptr)){
 	if(is_valid_move(position,KingPosition; true)){
-	  
+	  return true;
 
 	}
       }
@@ -227,9 +227,39 @@ bool Chess::in_check(bool white) const {
 
 
 bool Chess::in_mate(bool white) const {
-	/////////////////////////
-	// [REPLACE THIS STUB] //
-	/////////////////////////
+  std::pair<char,char> KingPosition;
+  for(int a = 'A'; a <= 'H'; a++){
+    for(int b = '1'; b <='8'; b++){
+      std::pair<char,char> position (i,j);
+      const Piece * temp = (*this)(position);
+      if(!(temp == nullptr)){
+	if(temp ->to_ascii() == 'K'){
+	  KingPosition.first = a;
+	  KingPosition,second = b;
+	}
+      }
+    }
+  }
+
+  if(in_check(bool white)){
+    for(int i = 2, i > 0, i--){
+      for(int j = 2, j > 0; j--){
+      std:pair<char,char> faKing(i,j);
+	if(is validMove(KingPosition, faKing; true){
+	    for(int k = 'A'; k <= 'H'; k++){
+	      for(int l = '1'; l <= '8'; l++){
+          	 std::pair<char, char> spot (k, l);
+		 const Piece * temp = board(position);
+		 if(!(temp == nullptr)){
+		   if(is_valid_move(position, faKing; true)){
+		     return true;
+		    }
+		 }
+	      }
+	    }
+	  }
+	  }
+      }
 	return false;
 }
 
