@@ -1,7 +1,10 @@
 #include "Chess.h"
 #include <iostream>
 #include <cmath>
+#include <sstream>
+//#incdlue <iostream>
 
+using std::stringstream;
 using std::cout;
 using std::endl;
 using std::pair;
@@ -97,7 +100,6 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
       board.add_piece(end, target->to_ascii());
     }
     board.add_piece(start, type);
-    cout << "if you make this move, you would be in check, but why does it change turns even though false is returned?" << endl;
     return false;
   }
   return true;
@@ -233,18 +235,49 @@ bool Chess::in_check(bool white) const {
 
 
 bool Chess::in_mate(bool white) const {
-	/////////////////////////
-	// [REPLACE THIS STUB] //
-	/////////////////////////
-	return false;
+  if (!(in_check(white))) {
+    return false;
+  }
+  else if (in_stalemate(white)) {
+    return true;
+  }
+  return false;
 }
 
 
 bool Chess::in_stalemate(bool white) const {
-	/////////////////////////
-	// [REPLACE THIS STUB] //
-	/////////////////////////
-	return false;
+  Chess mirror;
+  stringstream copy;
+  copy << *this;
+  copy >> mirror;
+  char temp;
+  if (white) {
+    temp = 'w';
+  } else {
+    temp = 'b';
+  }
+    
+  mirror.set_turn(temp);
+  
+  for (char i = 'A'; i <= 'H'; i++) {
+    for (char j = '1'; j <= '8'; j++) {
+      for (char u = 'A'; u <= 'H'; u++) {
+        for (char v = '1'; v <= '8'; v++) {
+	  pair <char, char> toMove (i,j);
+	  pair <char, char> toTarget (u,v);
+         
+	  if (mirror.make_move(toMove, toTarget)){
+	    cout << toMove.first << toMove.second << endl;
+	    cout << toTarget.first << toTarget.second << endl;
+	    return false;
+	  }
+	}
+      }
+    }
+  }
+
+  
+  return true;
 }
 
 
@@ -280,6 +313,7 @@ std::istream& operator>> (std::istream& is, Chess& chess) {
 }
 
 bool Chess::set_turn(char color) {
+  cout << color << endl;
   if (color != 'b' &&
       color != 'w') {
     return false;
