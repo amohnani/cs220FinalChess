@@ -215,7 +215,7 @@ bool Chess::in_check(bool white) const {
       std::pair<char, char> spot (k, l);
       const Piece * temp = board(position);
       if(!(temp == nullptr)){
-	if(is_valid_move(position,KingPosition; true)){
+	if(is_valid_move(position,KingPosition, true)){
 	  return true;
 
 	}
@@ -252,6 +252,7 @@ bool Chess::in_mate(bool white) const {
 		 const Piece * temp = board(position);
 		 if(!(temp == nullptr)){
 		   if(is_valid_move(position, faKing; true)){
+		     
 		     return true;
 		    }
 		 }
@@ -265,9 +266,7 @@ bool Chess::in_mate(bool white) const {
 
 
 bool Chess::in_stalemate(bool white) const {
-	/////////////////////////
-	// [REPLACE THIS STUB] //
-	/////////////////////////
+	
 	return false;
 }
 
