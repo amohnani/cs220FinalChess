@@ -71,7 +71,6 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
     // adds the piece if it is valid
     board.add_piece(end, type);
     board.delete_piece(start);
-    this->is_white_turn = !(this->is_white_turn);
   }
   else {
     if (!(is_valid_move(start, end, true))) {
@@ -81,7 +80,6 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
     board.delete_piece(start);
     board.delete_piece(end);
     board.add_piece(end, type);
-    this->is_white_turn = !(this->is_white_turn);
   }
   // checks if a pawn should be promoted
   if (type == 'P' && end.second == '8') {
@@ -102,6 +100,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
     board.add_piece(start, type);
     return false;
   }
+  is_white_turn = !is_white_turn;
   return true;
 }
 
@@ -148,7 +147,7 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
   // check for travelling horizontally
   else if (start.second - end.second == 0) {
     // iterates through the horizontal path
-    for (int i = (start.second-end.second)/abs(start.second-end.second);
+    for (int i = (start.first-end.first)/abs(start.first-end.first);
 	 abs(i) < abs(start.first - end.first);
 	 i += (start.first - end.first)/abs(start.first - end.first)) {
       path1 = end.first + i;
@@ -203,6 +202,7 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
 bool Chess::in_check(bool white) const {
 
   pair<char,char> pos;
+  // finds the king
   for (char i = '1'; i <= '8'; i++){
     for (char j = 'A'; j <= 'H'; j++){
       pair<char,char> cur(j,i);

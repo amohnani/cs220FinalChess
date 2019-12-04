@@ -3,7 +3,7 @@
 #Makefile
 
 CC=g++
-CFLAGS=-std=c++11 -pedantic -Wall -Wextra
+CFLAGS=-std=c++11 -pedantic -Wall -Wextra -g 
 
 # Links together files needed to create executable
 chess: King.o Queen.o Rook.o Knight.o Bishop.o Pawn.o Board.o main.o Chess.o Mystery.h CreatePiece.o Terminal.h
