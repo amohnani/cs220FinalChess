@@ -44,16 +44,14 @@ Chess::Chess() : is_white_turn(true) {
 }
 
 bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
-  
   // checks start and end are valid
-  if (!(is_valid_pos(start) && is_valid_pos(end))) {
-    std::cout << "Invalid start or end positions" << std::endl; 
+  if (!(is_valid_pos(start) && is_valid_pos(end))) { 
     return false;
   }
-  
   // checks if there is a piece on end, and then checks legal
   // move shape or legal capture shape in accordance
   const Piece * target = (this->board)(end);
+  char targetType;
   const Piece * toMove = (this->board)(start);
   if (toMove == nullptr) {
     return false;
@@ -73,6 +71,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
     board.delete_piece(start);
   }
   else {
+    targetType = target->to_ascii();
     if (!(is_valid_move(start, end, true))) {
       return false;
     }
@@ -94,8 +93,8 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   if (in_check((this->is_white_turn))) {
     // reverts the move if so
     board.delete_piece(end);
-    if (!(target == nullptr)) {
-      board.add_piece(end, target->to_ascii());
+    if (target != nullptr) {
+      board.add_piece(end, targetType);
     }
     board.add_piece(start, type);
     return false;
@@ -227,8 +226,6 @@ bool Chess::in_check(bool white) const {
       if (temp != nullptr){
 	if (temp->is_white() != white) {
 	  if (is_valid_move(curPos, pos, true)){
-	    cout << "you are in check because of" << curPos.first <<
-	      curPos.second << " " << pos.first << pos.second << endl;
 	    return true;
 	   }
 	}
@@ -270,10 +267,7 @@ bool Chess::in_stalemate(bool white) const {
         for (char v = '1'; v <= '8'; v++) {
 	  pair <char, char> toMove (i,j);
 	  pair <char, char> toTarget (u,v);
-         
 	  if (mirror.make_move(toMove, toTarget)){
-	    cout << toMove.first << toMove.second << endl;
-	    cout << toTarget.first << toTarget.second << endl;
 	    return false;
 	  }
 	}
