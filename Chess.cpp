@@ -55,6 +55,10 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   if (toMove == nullptr) {
     return false;
   }
+  if (toMove->is_white() != is_white_turn) {
+    return false;
+  }
+  
   char type = toMove->to_ascii();
   // for the case that there is nothing at the end
   if (target == nullptr) {
@@ -93,10 +97,9 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
       board.add_piece(end, target->to_ascii());
     }
     board.add_piece(start, type);
-    cout << "if you make this move, you would be in check" << endl;
+    cout << "if you make this move, you would be in check, but why does it change turns even though false is returned?" << endl;
     return false;
   }
-  
   return true;
 }
 
@@ -172,7 +175,7 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
     }
   }
 
-  if (to_capture && toMove->to_ascii() == 'Q') {
+  if (to_capture) {
     if (!(toMove->legal_capture_shape(start, end))) {
       return false;
     }
@@ -196,29 +199,32 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
 
 
 bool Chess::in_check(bool white) const {
-  //finds king on board
-  std::pair<char,char> KingPosition;
-  for (int i = 'A'; i <= 'H'; i++) {
-    for (int j = '1'; j <= '8'; j++) {
-      std::pair<char, char> position (i, j);
-      const Piece * temp = (*this)(position);
-      if (!(temp == nullptr)) {
-	if (temp->to_ascii() == 'K') {
-	  KingPosition.first = i;
-	  KingPosition.second = j;
-	}
+
+  pair<char,char> pos;
+  for (char i = '1'; i <= '8'; i++){
+    for (char j = 'A'; j <= 'H'; j++){
+      pair<char,char> cur(j,i);
+      const Piece* temp = board(cur);
+      if (temp == nullptr){
+	break;
+      }
+      if (temp->to_ascii() == 'K' && white){
+	pos.first = j;
+	pos.second = i;
+      }else if (temp->to_ascii() == 'k' && !white){
+	pos.first = j;
+	pos.second = i;
       }
     }
   }
-  for(int k = 'A';k <= 'H'; k++){
-    for(int l = '1'; l <= '8'; l++){
-      std::pair<char, char> spot (k, l);
-      const Piece * temp = board(position);
-      if(!(temp == nullptr)){
-	if(is_valid_move(position,KingPosition, true)){
-	  return true;
-
-	}
+  for (char i = '1'; i <= '8'; i++){
+    for (char j = 'A'; j <= 'H'; j++){
+      pair<char,char> curPos(j,i);
+      const Piece* temp = board(curPos);
+      if (temp != nullptr){
+	if (is_valid_move(curPos, pos, true)){
+	    return true;
+	  }
       }
     }
   }
@@ -227,46 +233,17 @@ bool Chess::in_check(bool white) const {
 
 
 bool Chess::in_mate(bool white) const {
-  std::pair<char,char> KingPosition;
-  for(int a = 'A'; a <= 'H'; a++){
-    for(int b = '1'; b <='8'; b++){
-      std::pair<char,char> position (i,j);
-      const Piece * temp = (*this)(position);
-      if(!(temp == nullptr)){
-	if(temp ->to_ascii() == 'K'){
-	  KingPosition.first = a;
-	  KingPosition,second = b;
-	}
-      }
-    }
-  }
-
-  if(in_check(bool white)){
-    for(int i = 2, i > 0, i--){
-      for(int j = 2, j > 0; j--){
-      std:pair<char,char> faKing(i,j);
-	if(is validMove(KingPosition, faKing; true){
-	    for(int k = 'A'; k <= 'H'; k++){
-	      for(int l = '1'; l <= '8'; l++){
-          	 std::pair<char, char> spot (k, l);
-		 const Piece * temp = board(position);
-		 if(!(temp == nullptr)){
-		   if(is_valid_move(position, faKing; true)){
-		     
-		     return true;
-		    }
-		 }
-	      }
-	    }
-	  }
-	  }
-      }
+	/////////////////////////
+	// [REPLACE THIS STUB] //
+	/////////////////////////
 	return false;
 }
 
 
 bool Chess::in_stalemate(bool white) const {
-	
+	/////////////////////////
+	// [REPLACE THIS STUB] //
+	/////////////////////////
 	return false;
 }
 
@@ -295,23 +272,24 @@ std::istream& operator>> (std::istream& is, Chess& chess) {
     }
   }
   is >> temp;
-  chess.set_turn(temp);
+  if (!(chess.set_turn(temp))) {
+    cout << "there was an error in the input file" << endl;
+  }
   
   return is;
 }
 
 bool Chess::set_turn(char color) {
-  
-  if (color != 'b' ||
+  if (color != 'b' &&
       color != 'w') {
     return false;
   }
   else if (color == 'b') {
-    this->is_white_turn = false;
+    is_white_turn = false;
     return true;
   }
   else {
-    this->is_white_turn = true;
+    is_white_turn = true;
     return true;
   }
 }
