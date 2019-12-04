@@ -65,6 +65,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   }
   
   type = toMove->to_ascii();
+
   // for the case that there is nothing at the end
   if (target == nullptr) {
     if (!(is_valid_move(start, end, false))) {
@@ -76,6 +77,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
   }
   else {
     targetType = target->to_ascii();
+    // checks if the capture move is valid
     if (!(is_valid_move(start, end, true))) {
       return false;
     }
@@ -84,11 +86,12 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
     board.delete_piece(end);
     board.add_piece(end, type);
   }
-  // checks if a pawn should be promoted
+  // checks if a white pawn should be promoted
   if (type == 'P' && end.second == '8') {
     board.delete_piece(end);
     board.add_piece(end, 'Q');
   }
+  // checks if a black pawn should be promoted
   else if (type == 'p' && end.second == '1') {
     board.delete_piece(end);
     board.add_piece(end, 'q');
@@ -103,6 +106,7 @@ bool Chess::make_move(std::pair<char, char> start, std::pair<char, char> end) {
     board.add_piece(start, type);
     return false;
   }
+  // changes the turn if it's all good
   is_white_turn = !is_white_turn;
   return true;
 }
@@ -179,21 +183,29 @@ bool Chess::is_valid_move(std::pair<char, char> start, std::pair<char, char> end
     }
   }
 
+  // if it's a capture move
   if (to_capture) {
+    // checks validity of the capture shape
     if (!(toMove->legal_capture_shape(start, end))) {
       return false;
     }
+    // checks if it's actually a capture, with a piece
+    // being targetted
     if (toTarget == nullptr) {
       return false;
     }
+    // checks if the targetted piece is of he opposite
+    // color or not
     if (toTarget->is_white() == toMove->is_white()) {
       return false;
     }
   }
   else {
+    // checks that the move piece is valid
     if (!(toMove->legal_move_shape(start, end))) {
       return false;
     }
+    // checks that there isn't a piece at the end
     if (toTarget != nullptr) {
       return false;
     }
@@ -211,6 +223,7 @@ bool Chess::in_check(bool white) const {
       pair<char,char> cur(j,i);
       const Piece* temp = board(cur);
       if (temp == nullptr){ }
+      // find the white, or black king depending on white
       else if (temp->to_ascii() == 'K' && white){
 	pos.first = j;
 	pos.second = i;
@@ -220,16 +233,20 @@ bool Chess::in_check(bool white) const {
       }
     }
   }
-
+  // iterates through the board
   for (char i = '1'; i <= '8'; i++){
     for (char j = 'A'; j <= 'H'; j++){
       pair<char,char> curPos(j,i);
       const Piece* temp = board(curPos);
 
-      
+      // if there's not a piece at the board
+      // it checks whether the piece can make
+      // a capture move between the piece and
+      // the king's position
       if (temp != nullptr){
 	if (temp->is_white() != white) {
 	  if (is_valid_move(curPos, pos, true)){
+            // if so, return true
 	    return true;
 	   }
 	}
@@ -239,19 +256,23 @@ bool Chess::in_check(bool white) const {
   return false;
 }
 
-
+// checks if it's in checkmate
 bool Chess::in_mate(bool white) const {
+  // checks if it's in check
   if (!(in_check(white))) {
     return false;
   }
+  // checkmate is essentially stalemate
+  // but the king is in check
   else if (in_stalemate(white)) {
     return true;
   }
   return false;
 }
 
-
+// checks for stalemate
 bool Chess::in_stalemate(bool white) const {
+  // creates a mirror of the board
   Chess mirror;
   stringstream copy;
   copy << *this;
@@ -262,15 +283,19 @@ bool Chess::in_stalemate(bool white) const {
   } else {
     temp = 'b';
   }
-    
   mirror.set_turn(temp);
-  
+
+  // iterates through every board position
+  // and makes a move to every other board
+  // position
   for (char i = 'A'; i <= 'H'; i++) {
     for (char j = '1'; j <= '8'; j++) {
       for (char u = 'A'; u <= 'H'; u++) {
         for (char v = '1'; v <= '8'; v++) {
 	  pair <char, char> toMove (i,j);
 	  pair <char, char> toTarget (u,v);
+	  // if there's a move that can be made
+	  // we are not in stalemate
 	  if (mirror.make_move(toMove, toTarget)){
 	    return false;
 	  }
@@ -278,8 +303,6 @@ bool Chess::in_stalemate(bool white) const {
       }
     }
   }
-
-  
   return true;
 }
 
@@ -296,8 +319,10 @@ std::ostream& operator<< (std::ostream& os, const Chess& chess) {
 
 std::istream& operator>> (std::istream& is, Chess& chess) {
   char temp;
-  
+  // clears the board first
   chess.board.clear_board();
+  // iterates through the istream
+  // and populates the board
   for (int i = '8'; i >= '1'; i--){
     for (int j = 'A'; j <= 'H'; j++){
       is >> temp;
@@ -308,22 +333,25 @@ std::istream& operator>> (std::istream& is, Chess& chess) {
     }
   }
   is >> temp;
+  // sets the turn
   if (!(chess.set_turn(temp))) {
     cout << "there was an error in the input file" << endl;
   }
   
   return is;
 }
-
+// sets the turn 
 bool Chess::set_turn(char color) {;
   if (color != 'b' &&
       color != 'w') {
     return false;
   }
+  // b means black
   else if (color == 'b') {
     is_white_turn = false;
     return true;
   }
+  // w means white
   else {
     is_white_turn = true;
     return true;
